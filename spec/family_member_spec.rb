@@ -124,6 +124,20 @@ describe Stem::Family::Member do
     end
   end
 
+  describe :== do
+    before { initialize_vars }
+
+    subject { new_member }
+
+    it { should respond_to :== }
+
+    it "should return true if the 2nd object is the same but is missing userdata" do
+      member2 = new_member
+      member2.instance_variable_set(:@userdata, nil)
+      subject.should == member2
+    end
+  end
+
   def initialize_vars
     @ami_id = "ami-12345678"
     @config = { "ami" => @ami_id }

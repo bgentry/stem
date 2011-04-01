@@ -13,6 +13,12 @@ module Stem
         @userdata = userdata
       end
 
+      def ==(member)
+        [ :family, :sha1, :source_ami, :time ].map do |attribute|
+          self.send(attribute) == member.send(attribute)
+        end.all?
+      end
+
       def capture(instance_id)
         Stem::Image.create(name, instance_id, tags)
       end
