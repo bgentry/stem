@@ -19,6 +19,10 @@ module Stem
         end.all?
       end
 
+      def already_built?
+        !Stem::Image.tagged(:family => family, :sha1 => sha1).empty?
+      end
+
       def capture(instance_id)
         Stem::Image.create(name, instance_id, tags)
       end

@@ -62,6 +62,30 @@ describe Stem::Family::Member do
     end
   end
 
+  describe :already_built? do
+    before { initialize_vars }
+
+    subject { new_member }
+
+    it { should respond_to :already_built? }
+
+    it "should check if the image is already built" do
+      Stem::Image.should_receive(:tagged).
+        with(:family => @family, :sha1 => @sha1).and_return([])
+      subject.already_built?
+    end
+
+    it "should return false if the image is not already built" do
+      Stem::Image.stub!(:tagged).and_return([])
+      subject.already_built?.should == false
+    end
+
+    it "should return true if the image is already built" do
+      Stem::Image.stub!(:tagged).and_return('ami-55557777')
+      subject.already_built?.should == true
+    end
+  end
+
   describe :capture do
     before { initialize_vars }
 
