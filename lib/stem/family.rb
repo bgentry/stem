@@ -2,6 +2,7 @@ module Stem
   module Family
     include Util
     extend self
+    autoload :Member, 'stem/family/member'
 
     def ami_for(family, release, architecture = "x86_64")
       amis = Stem::Image::tagged(:family => family,
