@@ -4,13 +4,19 @@ module Stem
       include Util
       attr_reader :family, :sha1, :source_ami, :time
 
-      def initialize(family, config, userdata)
+      def initialize(family, config, options = {})
         aggregate_hash_options_for_ami!(config)
         @time = Time.now.utc
         @family = family
-        @sha1 = Family.image_hash(config, userdata)
+        userdata = options.delete(:userdata)
+        @sha1 = if userdata
+          Family.image_hash(config, userdata)
+        elsif options[:sha1]
+          options.delete(:sha1)
+        else
+          raise ArgumentError.new("Must specify either userdata or sha1")
+        end
         @source_ami = config['ami']
-        @userdata = userdata
       end
 
       def ==(member)

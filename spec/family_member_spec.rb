@@ -51,6 +51,15 @@ describe Stem::Family::Member do
       lambda { new_member(:config => {}) }.should raise_exception(ArgumentError)
     end
 
+    it "should accept a sha1 instead of userdata" do
+      new_member(:sha1 => @sha1).sha1.should == @sha1
+    end
+
+    it "should not calculate the sha1 if it was specified instead of userdata" do
+      Stem::Family.should_not_receive(:image_hash)
+      new_member(:sha1 => @sha1)
+    end
+
     it "should calculate the sha1 from the config and userdata" do
       Stem::Family.should_receive(:image_hash).with(@config, @userdata).
         and_return(@sha1)
@@ -160,6 +169,12 @@ describe Stem::Family::Member do
       member2.instance_variable_set(:@userdata, nil)
       subject.should == member2
     end
+
+    it "should return true when comparing an object constructed with sha1 with one constructed with userdata" do
+      member2 = new_member(:userdata => @userdata)
+      member1 = new_member(:sha1 => @sha1)
+      member1.should == member2
+    end
   end
 
   def initialize_vars
@@ -174,7 +189,11 @@ describe Stem::Family::Member do
   def new_member(opts = {})
     family = opts.delete(:family) || @family
     config = opts.delete(:config) || @config
-    userdata = opts.delete(:userdata) || @userdata
-    Stem::Family::Member.new(family, config, userdata)
+    options = if opts[:sha1]
+                { :sha1 => opts.delete(:sha1) }
+              else
+                { :userdata => opts.delete(:userdata) || @userdata }
+              end
+    Stem::Family::Member.new(family, config, options)
   end
 end
