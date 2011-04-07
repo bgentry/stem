@@ -95,10 +95,28 @@ describe Stem::Family::Member do
     end
   end
 
-  describe :capture do
+  describe :architecture do
     before { initialize_vars }
 
     subject { new_member }
+
+    it { should respond_to :architecture }
+
+    it "should call Stem::Image.describe with its source_ami" do
+      Stem::Image.should_receive(:describe).with(subject.source_ami).
+        and_return({ 'architecture' => 'x86_64' })
+      subject.architecture
+    end
+  end
+
+  describe :capture do
+    before do
+      initialize_vars
+      @member = new_member
+      @member.stub!(:architecture).and_return('x86_64')
+    end
+
+    subject { @member }
 
     it { should respond_to :capture }
 
@@ -115,22 +133,30 @@ describe Stem::Family::Member do
   end
 
   describe :name do
-    before { initialize_vars }
+    before do
+      initialize_vars
+      @member = new_member
+      @member.stub!(:architecture).and_return('x86_64')
+    end
 
-    subject { new_member }
+    subject { @member }
 
     it { should respond_to :name }
 
     it "should return the family-timestamp without colons" do
       subject.name.
-        should == [subject.family, subject.timestamp.gsub(':', '_')].join('-')
+        should == [subject.family, subject.timestamp.gsub(':', '_'), subject.architecture].join('-')
     end
   end
 
   describe :tags do
-    before { initialize_vars }
+    before do
+      initialize_vars
+      @member = new_member
+      @member.stub!(:architecture).and_return('x86_64')
+    end
 
-    subject { new_member }
+    subject { @member }
 
     it { should respond_to :tags }
 

@@ -8,9 +8,8 @@ module Stem
         aggregate_hash_options_for_ami!(config)
         @time = Time.now.utc
         @family = family
-        userdata = options.delete(:userdata)
-        @sha1 = if userdata
-          Family.image_hash(config, userdata)
+        @sha1 = if options[:userdata]
+          Family.image_hash(config, options.delete(:userdata))
         elsif options[:sha1]
           options.delete(:sha1)
         else
@@ -29,12 +28,16 @@ module Stem
         !Stem::Image.tagged(:family => family, :sha1 => sha1).empty?
       end
 
+      def architecture
+        Stem::Image.describe(source_ami)['architecture']
+      end
+
       def capture(instance_id)
         Stem::Image.create(name, instance_id, tags)
       end
 
       def name
-        "#{family}-#{timestamp.gsub(':', '_')}"
+        [family, timestamp.gsub(':', '_'), architecture].join('-')
       end
 
       def tags
