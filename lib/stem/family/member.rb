@@ -33,11 +33,15 @@ module Stem
       end
 
       def capture(instance_id)
-        Stem::Image.create(name, instance_id, tags)
+        Stem::Image.create(name, instance_id)
       end
 
       def name
         [family, timestamp.gsub(':', '_'), architecture].join('-')
+      end
+
+      def tag(ami_id)
+        Stem::Tag.create(ami_id, tags)
       end
 
       def tags

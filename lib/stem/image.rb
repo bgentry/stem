@@ -4,21 +4,10 @@ module Stem
     extend self
 
     def create name, instance, tags = {}
-      image_id = swirl.call("CreateImage", "Name" => name, "InstanceId" => instance)["imageId"]
-      unless tags.empty?
-        # We'll retry this once if necessary due to consistency issues on the AWS side
-        i = 0
-        begin
-          Tag::create(image_id, tags)
-        rescue Swirl::InvalidRequest => e
-          if i < 5 && e.message =~ /does not exist/
-            i += 1
-            retry
-          end
-          raise e
-        end
+      unless tags == {}
+        raise Stem::Deprecated.new "Tags should be created separately due to AWS eventual consistency issues"
       end
-      image_id
+      swirl.call("CreateImage", "Name" => name, "InstanceId" => instance)["imageId"]
     end
 
     def deregister image

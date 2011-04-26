@@ -120,9 +120,9 @@ describe Stem::Family::Member do
 
     it { should respond_to :capture }
 
-    it "should call Stem::Image.create with its name, the instance_id, and tags" do
+    it "should call Stem::Image.create with its name and instance_id" do
       Stem::Image.should_receive(:create).
-        with(subject.name, @instance_id, subject.tags)
+        with(subject.name, @instance_id)
       subject.capture(@instance_id)
     end
 
@@ -146,6 +146,23 @@ describe Stem::Family::Member do
     it "should return the family-timestamp without colons" do
       subject.name.
         should == [subject.family, subject.timestamp.gsub(':', '_'), subject.architecture].join('-')
+    end
+  end
+
+  describe :tag do
+    before do
+      initialize_vars
+      @member = new_member
+      @ami_id = "ami-87654321"
+    end
+
+    subject { @member }
+
+    it { should respond_to :tag }
+
+    it "should call Stem::Tag::create with its ami_id and tags" do
+      Stem::Tag.should_receive(:create).with(@ami_id,  @member.tags)
+      @member.tag(@ami_id)
     end
   end
 

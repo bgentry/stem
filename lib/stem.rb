@@ -16,4 +16,5 @@ require 'stem/tag'
 
 module Stem
   autoload :Family, 'stem/family'
+  class Deprecated < StandardError; end
 end

@@ -24,17 +24,25 @@ describe Stem::Image do
       Stem::Image.create(name, source_ami)
     end
 
-    it "should not tag the image when no tags are passed in" do
-      Stem::Tag.should_not_receive(:create)
-      swirl.should_receive(:call).and_return("imageId" => nil)
-      Stem::Image.create("new_image", "ami-12345678")
+    it "should raise a Stem::Deprecated exception when tags are passed in" do
+      swirl.stub(:call).and_return({})
+      lambda do
+        Stem::Image.create("new_image", "ami-12345678", {"family" => "postgres"})
+      end.should raise_exception(Stem::Deprecated)
     end
 
-    it "should tag the image when tags are passed in" do
-      ami_id, tags = "ami-12345678", {"family" => "postgres"}
-      Stem::Tag.should_receive(:create).with(ami_id, tags)
-      swirl.should_receive(:call).and_return("imageId" => ami_id)
-      Stem::Image.create("new_image", ami_id, tags)
+    it "should not raise a Stem::Deprecated exception when no tags are passed in" do
+      swirl.stub(:call).and_return({})
+      lambda do
+        Stem::Image.create("new_image", "ami-12345678")
+      end.should_not raise_exception
+    end
+
+    it "should not raise a Stem::Deprecated exception when an empty tags hash is passed in" do
+      swirl.stub(:call).and_return({})
+      lambda do
+        Stem::Image.create("new_image", "ami-12345678", {})
+      end.should_not raise_exception
     end
 
     it "should return the ami id" do

@@ -5,6 +5,10 @@ module Stem
 
     def launch config, userdata = nil
       throw "No config provided" unless config
+      if config['tags'] && config['tags'] != {}
+        raise Stem::Deprecated.new "Tags should be created separately due to AWS eventual consistency issues"
+      end
+
       config = aggregate_hash_options_for_ami!(config)
       ami = config["ami"]
 
@@ -37,22 +41,7 @@ module Stem
         opt.merge!({ "UserData" => Base64.encode64(userdata)})
       end
 
-      response = swirl.call "RunInstances", opt
-      instance_id = response["instancesSet"].first["instanceId"]
-
-      if config['tags'] && !config['tags'].empty?
-        i = 0
-        begin
-          Tag::create(instance_id, config['tags'])
-        rescue Swirl::InvalidRequest => e
-          if i < 5 && e.message =~ /does not exist/
-            i += 1
-            retry
-          end
-          raise e
-        end
-      end
-      instance_id
+      swirl.call("RunInstances", opt)["instancesSet"].first["instanceId"]
     end
 
     def restart instance_id
