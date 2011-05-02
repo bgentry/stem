@@ -1,0 +1,213 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeSecurityGroups&GroupName.1=new_group&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      transfer-encoding: 
+      - chunked
+      date: 
+      - Mon, 02 May 2011 20:14:23 GMT
+      server: 
+      - AmazonEC2
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeSecurityGroupsResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>53132d4a-7d9e-40fd-8b36-c53e6569375d</requestId>
+          <securityGroupInfo>
+              <item>
+                  <ownerId>646412345678</ownerId>
+                  <groupName>new_group</groupName>
+                  <groupDescription>new_group</groupDescription>
+                  <ipPermissions/>
+              </item>
+          </securityGroupInfo>
+      </DescribeSecurityGroupsResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeSecurityGroups&GroupName.1=new_group&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 400
+      message: Bad Request
+    headers: 
+      transfer-encoding: 
+      - chunked
+      date: 
+      - Mon, 02 May 2011 20:28:52 GMT
+      server: 
+      - AmazonEC2
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <Response><Errors><Error><Code>InvalidGroup.NotFound</Code><Message>The security group 'new_group' does not exist</Message></Error></Errors><RequestID>03cb9cb0-06a5-47d5-9186-c5982cfa079f</RequestID></Response>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeSecurityGroups&GroupName.1=icmp_group&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      transfer-encoding: 
+      - chunked
+      date: 
+      - Mon, 02 May 2011 20:28:53 GMT
+      server: 
+      - AmazonEC2
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeSecurityGroupsResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>47ff74f7-a8ef-49e2-be5a-f57479e8e145</requestId>
+          <securityGroupInfo>
+              <item>
+                  <ownerId>646412345678</ownerId>
+                  <groupName>icmp_group</groupName>
+                  <groupDescription>icmp_group</groupDescription>
+                  <ipPermissions>
+                      <item>
+                          <ipProtocol>icmp</ipProtocol>
+                          <fromPort>-1</fromPort>
+                          <toPort>-1</toPort>
+                          <groups/>
+                          <ipRanges>
+                              <item>
+                                  <cidrIp>0.0.0.0/0</cidrIp>
+                              </item>
+                          </ipRanges>
+                      </item>
+                  </ipPermissions>
+              </item>
+          </securityGroupInfo>
+      </DescribeSecurityGroupsResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeSecurityGroups&GroupName.1=icmp_intergroup&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      transfer-encoding: 
+      - chunked
+      date: 
+      - Mon, 02 May 2011 20:40:26 GMT
+      server: 
+      - AmazonEC2
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeSecurityGroupsResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>470dc087-b7c5-4a0f-8ba1-82e7a1f6fc26</requestId>
+          <securityGroupInfo>
+              <item>
+                  <ownerId>646412345678</ownerId>
+                  <groupName>icmp_intergroup</groupName>
+                  <groupDescription>icmp_intergroup</groupDescription>
+                  <ipPermissions>
+                      <item>
+                          <ipProtocol>icmp</ipProtocol>
+                          <fromPort>-1</fromPort>
+                          <toPort>-1</toPort>
+                          <groups>
+                              <item>
+                                  <userId>646412345678</userId>
+                                  <groupName>default</groupName>
+                              </item>
+                          </groups>
+                          <ipRanges/>
+                      </item>
+                  </ipPermissions>
+              </item>
+          </securityGroupInfo>
+      </DescribeSecurityGroupsResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeSecurityGroups&GroupName.1=icmp_multirule&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      transfer-encoding: 
+      - chunked
+      date: 
+      - Mon, 02 May 2011 22:04:42 GMT
+      server: 
+      - AmazonEC2
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeSecurityGroupsResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>ac0bf364-0925-4a07-bb38-1b34a8ecd0f1</requestId>
+          <securityGroupInfo>
+              <item>
+                  <ownerId>646412345678</ownerId>
+                  <groupName>icmp_multirule</groupName>
+                  <groupDescription>icmp_multirule</groupDescription>
+                  <ipPermissions>
+                      <item>
+                          <ipProtocol>icmp</ipProtocol>
+                          <fromPort>-1</fromPort>
+                          <toPort>-1</toPort>
+                          <groups>
+                              <item>
+                                  <userId>646412345678</userId>
+                                  <groupName>default</groupName>
+                              </item>
+                              <item>
+                                  <userId>646412345678</userId>
+                                  <groupName>core</groupName>
+                              </item>
+                          </groups>
+                          <ipRanges>
+                              <item>
+                                  <cidrIp>0.0.0.0/0</cidrIp>
+                              </item>
+                              <item>
+                                  <cidrIp>10.0.0.0/32</cidrIp>
+                              </item>
+                          </ipRanges>
+                      </item>
+                  </ipPermissions>
+              </item>
+          </securityGroupInfo>
+      </DescribeSecurityGroupsResponse>
+    http_version: "1.1"

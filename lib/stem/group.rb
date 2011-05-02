@@ -70,6 +70,23 @@ module Stem
       swirl.call "RevokeSecurityGroupIngress", args
     end
 
+    def rules(name)
+      group = get(name)
+      return unless group
+      perms = group["ipPermissions"] || []
+      list = []
+      perms.map do |h|
+        puts h
+        h['ipRanges'].each do |ipr|
+          list << "#{h['ipProtocol']}://#{ipr['cidrIp']}"
+        end if h['ipRanges']
+        h['groups'].each do |group|
+          list << "#{h['ipProtocol']}://#{group['groupName']}@#{group['userId']}"
+        end if h['groups']
+      end
+      list
+    end
+
     def gen_authorize_target(index, target)
       if target =~ /^\d+\.\d+\.\d+.\d+\/\d+$/
         { "IpPermissions.#{index}.IpRanges.1.CidrIp"  => target }
