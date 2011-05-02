@@ -22,7 +22,7 @@ module Stem
         nil
     end
 
-    def create(name, rules = nil, description = "")
+    def create(name, rules = nil, description = nil)
         create!(name, rules, description)
         true
       rescue Swirl::InvalidRequest => e
@@ -30,7 +30,8 @@ module Stem
         false
     end
 
-    def create!(name, rules = nil, description = "")
+    def create!(name, rules = nil, description = nil)
+      description ||= name
       swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => description
       auth(name, rules) if rules
     end
