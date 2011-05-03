@@ -76,12 +76,19 @@ module Stem
       perms = group["ipPermissions"] || []
       list = []
       perms.map do |h|
-        puts h
         h['ipRanges'].each do |ipr|
-          list << "#{h['ipProtocol']}://#{ipr['cidrIp']}"
+          rule = "#{h['ipProtocol']}://#{ipr['cidrIp']}"
+          unless h['ipProtocol'] == 'icmp'
+            rule << ":#{[ h['fromPort'], h['toPort'] ].uniq.join('-')}"
+          end
+          list << rule
         end if h['ipRanges']
         h['groups'].each do |group|
-          list << "#{h['ipProtocol']}://#{group['groupName']}@#{group['userId']}"
+          rule = "#{h['ipProtocol']}://#{group['groupName']}@#{group['userId']}"
+          unless h['ipProtocol'] == 'icmp'
+            rule << ":#{[ h['fromPort'], h['toPort'] ].uniq.join('-')}"
+          end
+          list << rule
         end if h['groups']
       end
       list
