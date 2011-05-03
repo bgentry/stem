@@ -78,17 +78,11 @@ module Stem
       perms.map do |h|
         h['ipRanges'].each do |ipr|
           rule = "#{h['ipProtocol']}://#{ipr['cidrIp']}"
-          unless h['ipProtocol'] == 'icmp'
-            rule << ":#{[ h['fromPort'], h['toPort'] ].uniq.join('-')}"
-          end
-          list << rule
+          list << [ rule, parse_rule_ports(h) ].join
         end if h['ipRanges']
         h['groups'].each do |group|
           rule = "#{h['ipProtocol']}://#{group['groupName']}@#{group['userId']}"
-          unless h['ipProtocol'] == 'icmp'
-            rule << ":#{[ h['fromPort'], h['toPort'] ].uniq.join('-')}"
-          end
-          list << rule
+          list << [ rule, parse_rule_ports(h) ].join
         end if h['groups']
       end
       list
@@ -131,6 +125,16 @@ module Stem
         { "IpPermissions.#{index}.IpProtocol"         => $1 }.merge(gen_authorize_target(index,$2)).merge(gen_authorize_ports(index,$3))
       else
         raise "bad rule: #{rule}"
+      end
+    end
+
+    def parse_rule_ports(rule)
+      if rule['ipProtocol'] == 'icmp'
+        ""
+      elsif rule['fromPort'] == '0' && rule['toPort'] == '65535'
+        ":"
+      else
+        ":#{[ rule['fromPort'], rule['toPort']].uniq.join('-')}"
       end
     end
   end

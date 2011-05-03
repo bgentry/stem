@@ -77,12 +77,12 @@ describe Stem::Group do
         Stem::Group::rules('tcp_group').should == [ 'tcp://0.0.0.0/0:5000-6000' ]
       end
 
-      it "should return the correct format for a tcp group rule with no ports" do
+      it "should return the correct format for a tcp group rule with all ports enabled" do
         Stem::Group.stub(:get).and_return({
           'ipPermissions' => [{
             "ipProtocol" => "tcp",
-            "fromPort" => nil,
-            "toPort" => nil,
+            "fromPort" => "0",
+            "toPort" => "65535",
             "groups" => [{"userId" => "123456789", "groupName" => "default"}],
             "ipRanges" => nil
           }]
@@ -113,6 +113,8 @@ describe Stem::Group do
         }, {
           "ipProtocol" => "tcp",
           "groups" => [{ "userId" => "123456789", "groupName" => "default" }],
+          "fromPort" => "0",
+          "toPort" => "65535",
           "ipRanges" => nil
         }, {
           "ipProtocol" => "tcp",
