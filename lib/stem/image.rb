@@ -14,6 +14,12 @@ module Stem
       swirl.call("DeregisterImage", "ImageId" => image)["return"]
     end
 
+    def list
+      swirl.call("DescribeImages", "Owner" => "self")["imagesSet"].map do |i|
+        i["imageId"]
+      end
+    end
+
     def named name
       opts = get_filter_opts("name" => name).merge("Owner" => "self")
       i = swirl.call("DescribeImages", opts)["imagesSet"].first

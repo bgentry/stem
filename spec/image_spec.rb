@@ -124,6 +124,26 @@ describe Stem::Image do
     end
   end
 
+  context "list" do
+    use_vcr_cassette
+
+    it { should respond_to :list }
+
+    it "should call swirl with DescribeImages" do
+      Stem::Image.swirl.should_receive(:call).with("DescribeImages", {
+        "Owner" => "self"
+      }).and_return({ "imagesSet" => []})
+      Stem::Image.list
+    end
+
+    it "should return the AMI IDs" do
+      result = [{'imageId' => 'ami-11112222'}, {'imageId' => 'ami-33334444'}]
+      Stem::Image.swirl.stub(:call).
+        and_return("imagesSet" => result)
+      Stem::Image.list.should == ['ami-11112222', 'ami-33334444']
+    end
+  end
+
   def swirl
     Stem::Image.swirl
   end
