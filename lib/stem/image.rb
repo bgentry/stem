@@ -15,7 +15,8 @@ module Stem
     end
 
     def list
-      swirl.call("DescribeImages", "Owner" => "self")["imagesSet"].map do |i|
+      l = swirl.call("DescribeImages", "Owner" => "self")["imagesSet"] || []
+      l.map do |i|
         i["imageId"]
       end
     end

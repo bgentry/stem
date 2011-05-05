@@ -142,6 +142,11 @@ describe Stem::Image do
         and_return("imagesSet" => result)
       Stem::Image.list.should == ['ami-11112222', 'ami-33334444']
     end
+
+    it "should return an empty array when there are no images" do
+      Stem::Image.swirl.stub(:call).and_return("imagesSet" => nil)
+      Stem::Image.list.should == []
+    end
   end
 
   def swirl
