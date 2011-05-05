@@ -1,0 +1,60 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeSnapshots&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      transfer-encoding: 
+      - chunked
+      date: 
+      - Thu, 05 May 2011 20:35:38 GMT
+      server: 
+      - AmazonEC2
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeSnapshotsResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>506032e2-997e-4050-a519-2ad6305b78fa</requestId>
+          <snapshotSet>
+              <item>
+                  <snapshotId>snap-175d257a</snapshotId>
+                  <volumeId>vol-94189cfc</volumeId>
+                  <status>completed</status>
+                  <startTime>2011-01-19T01:46:53.000Z</startTime>
+                  <progress>100%</progress>
+                  <ownerId>646476705259</ownerId>
+                  <volumeSize>15</volumeSize>
+                  <description>Created by CreateImage(i-db9d46b7) for ami-60a05009 from vol-94189cfc</description>
+              </item>
+              <item>
+                  <snapshotId>snap-195d2574</snapshotId>
+                  <volumeId>vol-6c199d04</volumeId>
+                  <status>completed</status>
+                  <startTime>2011-01-19T01:46:50.000Z</startTime>
+                  <progress>100%</progress>
+                  <ownerId>646476705259</ownerId>
+                  <volumeSize>15</volumeSize>
+                  <description>Created by CreateImage(i-d99d46b5) for ami-6ca05005 from vol-6c199d04</description>
+              </item>
+              <item>
+                  <snapshotId>snap-29410444</snapshotId>
+                  <volumeId>vol-5220a73a</volumeId>
+                  <status>completed</status>
+                  <startTime>2011-01-19T17:46:36.000Z</startTime>
+                  <progress>100%</progress>
+                  <ownerId>646476705259</ownerId>
+                  <volumeSize>15</volumeSize>
+                  <description>Created by CreateImage(i-4db31621) for ami-82a757eb from vol-5220a73a</description>
+              </item>
+          </snapshotSet>
+      </DescribeSnapshotsResponse>
+    http_version: "1.1"

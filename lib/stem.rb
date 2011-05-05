@@ -16,5 +16,6 @@ require 'stem/tag'
 
 module Stem
   autoload :Family, 'stem/family'
+  autoload :Snapshot, 'stem/snapshot'
   class Deprecated < StandardError; end
 end
