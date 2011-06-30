@@ -21,6 +21,42 @@ describe Stem::Group do
     end
 
     context "icmp rules" do
+      it "should return the correct format for an icmp cidr rule with no ports" do
+        Stem::Group.stub(:get).and_return({
+          'ipPermissions' => [{
+         "ipProtocol" => "icmp",
+          "fromPort" => "-1",
+          "toPort" => "-1",
+          "groups" => nil,
+          "ipRanges" => [{"cidrIp" => "0.0.0.0/0"}]
+        }]})
+        Stem::Group::rules('icmp_group').should == [ 'icmp://0.0.0.0/0' ]
+      end
+
+      it "should return the correct format for an icmp cidr rule with 1 port" do
+        Stem::Group.stub(:get).and_return({
+          'ipPermissions' => [{
+         "ipProtocol" => "icmp",
+          "fromPort" => "8",
+          "toPort" => "8",
+          "groups" => nil,
+          "ipRanges" => [{"cidrIp" => "0.0.0.0/0"}]
+        }]})
+        Stem::Group::rules('icmp_group').should == [ 'icmp://0.0.0.0/0:8' ]
+      end
+
+      it "should return the correct format for an icmp cidr rule with 2 ports" do
+        Stem::Group.stub(:get).and_return({
+          'ipPermissions' => [{
+         "ipProtocol" => "icmp",
+          "fromPort" => "8",
+          "toPort" => "0",
+          "groups" => nil,
+          "ipRanges" => [{"cidrIp" => "0.0.0.0/0"}]
+        }]})
+        Stem::Group::rules('icmp_group').should == [ 'icmp://0.0.0.0/0:8-0' ]
+      end
+
       it "should return the correct format for a single icmp rule" do
         Stem::Group::rules('icmp_group').should == [ 'icmp://0.0.0.0/0' ]
       end
@@ -108,6 +144,14 @@ describe Stem::Group do
       Stem::Group.stub(:get).and_return({
         'ipPermissions' => [{
           "ipProtocol" => "icmp",
+          "fromPort" => "-1",
+          "toPort" => "-1",
+          "groups" => nil,
+          "ipRanges" => [{ "cidrIp" => "0.0.0.0/0" }]
+        }, {
+          "ipProtocol" => "icmp",
+          "fromPort" => "8",
+          "toPort" => "0",
           "groups" => nil,
           "ipRanges" => [{ "cidrIp" => "0.0.0.0/0" }]
         }, {
@@ -138,6 +182,7 @@ describe Stem::Group do
       })
       Stem::Group::rules('all_group').should == [
         'icmp://0.0.0.0/0',
+        'icmp://0.0.0.0/0:8-0',
         'tcp://default@123456789:',
         "tcp://10.10.10.10/16:443",
         'udp://zealot@123456789:30-80',

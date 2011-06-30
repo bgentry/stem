@@ -6,6 +6,7 @@ module Stem
     ## Example Rules
 
     ## icmp://1.2.3.4/32
+    ## icmp://1.2.3.4/32:8-0
     ## icmp://GroupName
     ## icmp://GroupName@UserId
     ## icmp://@UserId
@@ -117,10 +118,11 @@ module Stem
     end
 
     def gen_authorize(index, rule)
-      if rule =~ /icmp:\/\/(.+)/
-        { "IpPermissions.#{index}.IpProtocol"         => "icmp",
+      if rule =~ /icmp:\/\/([^:]+)(?::(.*))?/
+        auth = { "IpPermissions.#{index}.IpProtocol"         => "icmp",
           "IpPermissions.#{index}.FromPort"           => "-1",
           "IpPermissions.#{index}.ToPort"             => "-1" }.merge(gen_authorize_target(index,$1))
+        $2 ? auth.merge(gen_authorize_ports(index, $2)) : auth
       elsif rule =~ /(tcp|udp):\/\/(.*):(.*)/
         { "IpPermissions.#{index}.IpProtocol"         => $1 }.merge(gen_authorize_target(index,$2)).merge(gen_authorize_ports(index,$3))
       else
@@ -129,7 +131,7 @@ module Stem
     end
 
     def parse_rule_ports(rule)
-      if rule['ipProtocol'] == 'icmp'
+      if rule['ipProtocol'] == 'icmp' && rule['fromPort'] == '-1' && rule['toPort'] == '-1'
         ""
       elsif rule['fromPort'] == '0' && rule['toPort'] == '65535'
         ":"
